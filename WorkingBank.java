@@ -1,10 +1,15 @@
+//Jack Moran
+//Program 7
+
 package program4C;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.PrintWriter;
 import java.util.Random;
 
 public class WorkingBank {
@@ -38,12 +43,13 @@ public class WorkingBank {
 		//Fill customer Queue
 		for (int j = 0; j < 10; j++)
 		{
-
+			
+			int cusNum = rdom.nextInt(1000, 9999);
 			Customer temp3 = new Customer();
 			String name = "Name" + (j + 1);
 			
 			temp3.setName(name);
-			
+			temp3.setId(cusNum);
 			custQ.enqueue(temp3);
 		}
 		
@@ -111,15 +117,26 @@ public class WorkingBank {
 		//Write the customer objects to a file
 		try
 		{
-		FileOutputStream cF = new FileOutputStream(new File("Customers and Accounts.txt"));
-		ObjectOutputStream cO = new ObjectOutputStream(cF);
+		PrintWriter writer = new PrintWriter(new FileWriter("Customers and Accounts.txt"));
 		while(custQ.isEmpty() != true)
 		{
-		cO.writeObject(custQ.dequeue());
+		Customer tempx = new Customer();
+		tempx = custQ.dequeue();
+		Checking tempxc = tempx.getChecking();
+		Savings tempxs = tempx.getSavings();
+		writer.println("Customer Name: " + tempx.getName());
+		writer.println("Customer ID: " + tempx.getId());
+		writer.println("Checking:");
+		writer.println("\tChecking Num: " + tempxc.getNumber());
+		writer.println("\tChecking Amount: " + tempxc.getAmount());
+		writer.println("Savings:");
+		writer.println("\tSavings Num: " + tempxs.getNumber());
+		writer.println("\tSavings Amount: " + tempxs.getAmount());
+		writer.println();
+		
 		}
 		System.out.println("Customers and their accounts have been written to Customers and Accounts.txt");
-		cO.close();
-		cF.close();
+		writer.close();
 		}
 		catch(FileNotFoundException e){}
 		catch(IOException e) {}
